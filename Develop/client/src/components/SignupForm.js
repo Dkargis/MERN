@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-
 const SignupForm = () => {
   // set initial form state
   const [userFormData, setUserFormData] = useState({ userName: '', email: '', password: '' });
@@ -12,26 +10,21 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-
   const [addUser, { error }] = useMutation(ADD_USER);
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     
     setUserFormData({ ...userFormData, [name]: value });
     
   };
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-
     try { console.log(userFormData);
       const { data } = await addUser({
         variables: { ...userFormData }
@@ -43,14 +36,12 @@ const SignupForm = () => {
       console.error(err);
       setShowAlert(true);
     }
-
     setUserFormData({
       userName: '',
       email: '',
       password: '',
     });
   };
-
   return (
     <>
       {/* This is needed for the validation functionality above */}
@@ -59,7 +50,6 @@ const SignupForm = () => {
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
           Something went wrong with your signup!
         </Alert>
-
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='userName'>Username</Form.Label>
           <Form.Control
@@ -72,7 +62,6 @@ const SignupForm = () => {
           />
           <Form.Control.Feedback type='invalid'>Username is required!</Form.Control.Feedback>
         </Form.Group>
-
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='email'>Email</Form.Label>
           <Form.Control
@@ -85,7 +74,6 @@ const SignupForm = () => {
           />
           <Form.Control.Feedback type='invalid'>Email is required!</Form.Control.Feedback>
         </Form.Group>
-
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='password'>Password</Form.Label>
           <Form.Control
@@ -108,5 +96,4 @@ const SignupForm = () => {
     </>
   );
 };
-
 export default SignupForm;
